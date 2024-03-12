@@ -1,11 +1,24 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-import { sendToBackground } from "@plasmohq/messaging"
 
-import "style.css"
 
-import CheckBox from "~component/CheckBox"
-import Loading from "~component/Loading"
+import { sendToBackground } from "@plasmohq/messaging";
+
+
+
+
+
+
+import "style.css";
+
+
+
+import CheckBox from "~component/CheckBox";
+import Loading from "~component/Loading";
+
+
+
+
 
 function IndexPopup() {
   const [loading, setLoading] = useState(true)
@@ -15,7 +28,7 @@ function IndexPopup() {
     sendToBackground({ name: "setCookie" })
       .then((res) => {
         console.log("res:", res)
-        setIsEnable(res?.enable)
+        setIsEnable(res?.enable === true)
       })
       .finally(() => {
         setLoading(false)
