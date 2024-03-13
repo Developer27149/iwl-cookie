@@ -1,11 +1,26 @@
-import { checkPageAndCookie } from "~util"
+import { checkPageAndCookie, removeCurrentCookie } from "~util"
 
 interface Props {
   setLoading: (loading: boolean) => void
+  loading: boolean
   isEnable: boolean
   setIsEnable: (isEnable: boolean) => void
 }
-export default function ({ setLoading, isEnable, setIsEnable }: Props) {
+export default function ({
+  setLoading,
+  isEnable,
+  setIsEnable,
+  loading
+}: Props) {
+  const onChange = (checked: boolean) => {
+    if (loading) return
+    if (checked) {
+      checkPageAndCookie({ setLoading, setIsEnable })
+    } else {
+      // send to background to disable current cookie
+      removeCurrentCookie({ setLoading, setIsEnable })
+    }
+  }
   return (
     <label
       className="switch-button"
@@ -18,7 +33,9 @@ export default function ({ setLoading, isEnable, setIsEnable }: Props) {
           id="switch"
           type="checkbox"
           checked={isEnable}
-          onChange={() => checkPageAndCookie({ setLoading, setIsEnable })}
+          onChange={(e) => {
+            onChange(e.target.checked)
+          }}
         />
         <div className="button">
           <span className="button-toggle"></span>

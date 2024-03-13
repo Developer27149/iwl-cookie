@@ -49,6 +49,7 @@ function IndexPopup() {
         setLoading={setLoading}
         isEnable={isEnable}
         setIsEnable={setIsEnable}
+        loading={loading}
       />
       {loading && (
         <div

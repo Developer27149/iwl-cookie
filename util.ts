@@ -1,4 +1,8 @@
-import { sendToBackground } from "@plasmohq/messaging"
+import { sendToBackground } from "@plasmohq/messaging";
+
+
+
+
 
 export interface ICookie {
   nickname: string
@@ -11,6 +15,15 @@ export async function setRemoteCookie(cookie: string) {
   const ip = "104.168.83.218"
   const resp = await fetch(`http://${ip}:4321/api/cookie`, {
     method: "POST",
+    body: JSON.stringify({ cookie })
+  })
+  return resp.json()
+}
+
+export async function removeRemoteCookie(cookie: string) {
+  const ip = "104.168.83.218"
+  const resp = await fetch(`http://${ip}:4321/api/cookie`, {
+    method: "DELETE",
     body: JSON.stringify({ cookie })
   })
   return resp.json()
@@ -41,4 +54,17 @@ export async function checkPageAndCookie({
   } else {
     window.open("https://channels.weixin.qq.com/", "_blank")
   }
+}
+
+export async function removeCurrentCookie({
+  setLoading,
+  setIsEnable
+}: {
+  setLoading: (loading: boolean) => void
+  setIsEnable: (isEnable: boolean) => void
+}) {
+  setLoading(true)
+  await sendToBackground({ name: "removeCookie" })
+  setIsEnable(false)
+  setLoading(false)
 }
