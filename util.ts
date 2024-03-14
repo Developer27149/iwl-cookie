@@ -1,8 +1,6 @@
-import { sendToBackground } from "@plasmohq/messaging";
+import base64 from "base-64"
 
-
-
-
+import { sendToBackground } from "@plasmohq/messaging"
 
 export interface ICookie {
   nickname: string
@@ -12,8 +10,13 @@ export interface ICookie {
 }
 
 export async function setRemoteCookie(cookie: string) {
-  const ip = "104.168.83.218"
-  const resp = await fetch(`http://${ip}:4321/api/cookie`, {
+  // const ip = "104.168.83.218"
+  // const ip = "192.168.1.10"
+  const { backendIp = "117.50.190.179" } =
+    await chrome.storage.sync.get("backendIp")
+  console.log("backendIp", backendIp)
+
+  const resp = await fetch(`http://${backendIp}:4321/api/cookie`, {
     method: "POST",
     body: JSON.stringify({ cookie })
   })
@@ -21,11 +24,15 @@ export async function setRemoteCookie(cookie: string) {
 }
 
 export async function removeRemoteCookie(cookie: string) {
-  const ip = "104.168.83.218"
-  const resp = await fetch(`http://${ip}:4321/api/cookie`, {
-    method: "DELETE",
-    body: JSON.stringify({ cookie })
-  })
+  const config = await chrome.storage.sync.get("backendIp")
+  const { backendIp = "117.50.190.179" } = config
+  console.log("backendIp", backendIp, config)
+  const resp = await fetch(
+    `http://${backendIp}:4321/api/cookie?cookie=${base64.encode(cookie)}`,
+    {
+      method: "DELETE"
+    }
+  )
   return resp.json()
 }
 

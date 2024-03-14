@@ -10,6 +10,7 @@ import { sendToBackground } from "@plasmohq/messaging";
 
 
 import "style.css";
+import "base.css"
 
 
 
